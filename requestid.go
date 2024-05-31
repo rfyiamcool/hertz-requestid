@@ -45,13 +45,14 @@ func New(opts ...Option) app.HandlerFunc {
 		opt(cfg)
 	}
 
+	headerXRequestID = string(cfg.headerKey)
+
 	return func(ctx context.Context, c *app.RequestContext) {
 		// Get id from request
 		rid := c.Request.Header.Get(string(cfg.headerKey))
 		if rid == "" {
 			rid = cfg.generator(ctx, c)
 		}
-		headerXRequestID = string(cfg.headerKey)
 		if cfg.handler != nil {
 			cfg.handler(ctx, c, rid)
 		}
